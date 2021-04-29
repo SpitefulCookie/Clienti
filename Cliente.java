@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class Cliente {
 
     private int codCliente;
@@ -10,15 +13,11 @@ public class Cliente {
 
     private String tipo;
 
-    private int giornoDiNascita;
+    private Calendar dataNascita;
 
-    private int meseDiNascita;
+    public Cliente(int codCliente, String nome, String cognome, String indirizzo, String tipo, String dataDiNascita){ 
 
-    private int annoDiNascita;
-
-    public Cliente(String codCliente, String nome, String cognome, String indirizzo, String tipo, String dataDiNascita){ 
-
-        this.codCliente = Integer.parseInt(codCliente);
+        this.codCliente = codCliente;
 
         this.nome = nome;
 
@@ -30,11 +29,32 @@ public class Cliente {
 
         String[] buffer = dataDiNascita.split("/");
 
-        this.giornoDiNascita = Integer.parseInt(buffer[0]);
+        this.dataNascita = Calendar.getInstance();
 
-        this.meseDiNascita = Integer.parseInt(buffer[1]);
+        if(!tipo.equals("Azienda")){
 
-        this.annoDiNascita = Integer.parseInt(buffer[2]);
+            this.dataNascita.set(Integer.parseInt(buffer[2]), Integer.parseInt(buffer[1]),Integer.parseInt(buffer[0]));
+
+        }
+
+    }
+
+    @Override
+    public String toString(){
+
+        SimpleDateFormat formatoData = new SimpleDateFormat("dd/mm/yyyy");
+
+        String data = formatoData.format(dataNascita.getTime());
+        
+        if(!this.tipo.equals("Azienda")){
+
+            return "Codice Cliente: "+ this.codCliente +"\t\tTipo: "+ this.tipo +"\nCognome: " + this.cognome + "\t\tNome: " + this.nome + "\nIndirizzo: " + this.indirizzo + "\nData di nascita: " + data;
+
+        } else{
+
+            return "Codice Cliente: "+ this.codCliente +"\t\tTipo: "+ this.tipo +"\nNome: " + this.nome + "\nIndirizzo: " + this.indirizzo;
+
+        }
 
     }
 

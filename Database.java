@@ -2,80 +2,46 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-
 import java.util.Map;
 
 public class Database {
 
-    private final String delimiter = "¥";
+    private static final String DELIMITER = "¥";
 
     private String db;
 
-    private Map<String, Integer> schema; 
+    private Map<Integer, Cliente> tuple; 
 
     private BufferedReader br;
 
-    public Database(String fileName){ //Metodo per leggere dal file e costruire uno schema
+    public Database(String fileName){ 
 
         this.db = fileName;
 
-        try {
-            
-            br = new BufferedReader(new FileReader(fileName));   
-
-            String fLine = br.readLine();
-
-            String[] buffer = fLine.split(delimiter);
-            
-            this.schema = new HashMap<String, Integer>();
-
-            for (Integer i=0; i<buffer.length; i++){
-
-                schema.put(buffer[i], i); //lo schema, tramite metodo get(String, Integer) restituirà un valore intero
-
-            }
-
-            /*
-                for (String s : buffer){ // debug
-
-                    System.out.println("Valore ottenuto da \""+s+"\": "+ schema.get(s));
-
-                }
-            */
-
-        } catch (IOException e){
-
-            System.out.println("File non trovato!");
-
-        }
-
-
-    }
-
-    public String getValore(int indice, String campo){
+        this.tuple = new HashMap<>();
 
         try {
             
-            br = new BufferedReader(new FileReader(this.db));  
+            br = new BufferedReader(new FileReader(fileName)); //Creazione di un buffered reader 
 
-            String fLine = br.readLine();
-
-            String[] buffer;
-
-            fLine = br.readLine();
+            String fLine = br.readLine(); //Salto la riga d'intestazione 
 
             do{
 
-                buffer = fLine.split(delimiter);
-
-                if(Integer.parseInt(buffer[0])==indice){
-
-                    return buffer[this.schema.get(campo)];
-
-                }
-
                 fLine = br.readLine();
-                
+
+                if(fLine != null){
+					
+					String[] datiCliente = fLine.split(DELIMITER);
+
+					int codCliente = Integer.parseInt(datiCliente[0]);
+
+					Cliente c = new Cliente(codCliente, datiCliente[1],datiCliente[2],datiCliente[3],datiCliente[4],datiCliente[5]); //Creazione nuova istanza di cliente contenente i dati letti
+
+					this.tuple.put(codCliente, c);
+
+				}
+
             }while (fLine != null);
 
         } catch (IOException e){
@@ -84,7 +50,17 @@ public class Database {
 
         }
 
-        return "Utente non trovato";
+    }
+
+    public Cliente getValore(int codCliente){
+
+        return this.tuple.get(codCliente);
+
+    }
+
+    public String getDBName(){
+
+        return this.db;
 
     }
 

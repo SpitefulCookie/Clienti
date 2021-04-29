@@ -4,7 +4,22 @@ public class Main{
         
         Database db = new Database ("Clienti.db");
 
-        System.out.println(db.getValore(5, "Cognome"));
+        try{
+        
+            System.out.println();
+            System.out.println(db.getValore(2).toString());
+
+            System.out.println();
+            System.out.println(db.getValore(5).toString());
+
+            System.out.println();
+            System.out.println(db.getValore(0).toString());
+
+        } catch (NullPointerException e){
+
+            System.out.println("Cliente non presente nel database");
+
+        }
 
     }
 
